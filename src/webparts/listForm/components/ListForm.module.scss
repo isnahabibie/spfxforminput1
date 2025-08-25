@@ -1,0 +1,56 @@
+// src/webparts/listForm/components/ListForm.module.scss
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.listForm {
+  padding: 1em;
+  color: "[theme:bodyText, default: #323130]";
+}
+
+.formGroup {
+  margin-bottom: 1em;
+
+  label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: $ms-font-weight-semibold;
+  }
+
+  input[type="text"],
+  input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid "[theme:neutralTertiary, default: #a19f9d]";
+  }
+
+  button {
+    padding: 10px 15px;
+    border: none;
+    background-color: "[theme:themePrimary, default: #0078d4]";
+    color: white;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: "[theme:neutralLight, default: #edebe9]";
+      cursor: not-allowed;
+    }
+  }
+}
+
+.statusMessage {
+  margin-top: 1em;
+  padding: 0.8em;
+  border-radius: 3px;
+}
+
+.success {
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+}
+
+.error {
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #ebccd1;
+}
