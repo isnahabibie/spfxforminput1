@@ -1,6 +1,11 @@
 // src/webparts/listForm/components/ListForm.module.scss
 @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+// Tambahkan kode ini di dalam file .scss Anda
 
+.formTitle {
+  text-align: center;
+  margin-bottom: 20px;
+}
 .listForm {
   padding: 1em;
   color: "[theme:bodyText, default: #323130]";
