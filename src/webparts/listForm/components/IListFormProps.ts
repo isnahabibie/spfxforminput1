@@ -1,5 +1,5 @@
 // src/webparts/listForm/components/IListFormProps.ts
-import { SPService } from "../services/SPService";
+import  { SPService }   from "../services/SPService";
 
 export interface IListFormProps {
   spService: SPService;

@@ -8,16 +8,17 @@ import { IListFormProps } from './IListFormProps';
 export default function ListForm(props: IListFormProps): JSX.Element {
   // State untuk menyimpan nilai dari setiap input field
   const [title, setTitle] = useState<string>('');
-  const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
+  // DIUBAH: State untuk menyimpan array of files
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   // State untuk menangani proses submit
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<{ message: string, isError: boolean } | null>(null);
 
-  // Handler saat input file berubah
+  // DIUBAH: Handler saat input file berubah untuk multiple files
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
+    if (event.target.files) {
+      setSelectedFiles(Array.from(event.target.files));
     }
   };
 
@@ -34,12 +35,15 @@ export default function ListForm(props: IListFormProps): JSX.Element {
     setStatusMessage(null);
 
     try {
-      await props.spService.addListItem(props.listName, title, selectedFile);
+      // DIUBAH: Mengirim array 'selectedFiles' ke service
+      // PENTING: Pastikan props.spService.addListItem juga diubah untuk menerima array File[]
+      await props.spService.addListItem(props.listName, title, selectedFiles);
 
       // Jika sukses, reset form dan tampilkan pesan sukses
-      setStatusMessage({ message: 'Item successfully added!', isError: false });
+      setStatusMessage({ message: 'Item and attachments successfully added!', isError: false });
       setTitle('');
-      setSelectedFile(undefined);
+      // DIUBAH: Reset state file menjadi array kosong
+      setSelectedFiles([]);
       // Reset file input value
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
@@ -66,11 +70,12 @@ export default function ListForm(props: IListFormProps): JSX.Element {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="file-input">Attachment</label>
+          <label htmlFor="file-input">Attachments</label>
           <input
             type="file"
             id="file-input"
             onChange={handleFileChange}
+            multiple // DIUBAH: Tambahkan atribut multiple
           />
         </div>
         <div className={styles.formGroup}>

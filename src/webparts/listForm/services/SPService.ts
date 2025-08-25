@@ -1,47 +1,42 @@
-import { WebPartContext } from "@microsoft/sp-webpart-base";
-import { SPFI, spfi, SPFx } from "@pnp/sp";
+// src/webparts/listform/services/SPService.ts
 
-// Import interface dari sub-modul yang benar
-import { IItem } from "@pnp/sp/items";
-import { IAttachments} from "@pnp/sp/attachments";
-
-// Side-effect imports untuk mengaktifkan fungsi
+// 1. PASTIKAN IMPORT INI ADA
+import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { spfi, SPFx } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/attachments";
 
-// Interface kustom untuk membantu TypeScript
-// BENAR
-interface IItemWithAttachments extends IItem {
-    attachmentFiles: IAttachments;
-}
-
+// INI ADALAH CLASS LENGKAP YANG SUDAH DIPERBAIKI
 export class SPService {
-  private _sp: SPFI;
+  // Property untuk menyimpan context
+  private _context: WebPartContext;
 
+  // Constructor untuk menerima context dari web part
   constructor(context: WebPartContext) {
-    this._sp = spfi().using(SPFx(context));
+    this._context = context;
   }
 
-  public async addListItem(listName: string, title: string, file: File | undefined): Promise<void> {
+  public async addListItem(listName: string, title: string, files: File[]): Promise<void> {
+    // Gunakan context yang sudah disimpan: this._context
+    const sp = spfi().using(SPFx(this._context));
+
     try {
-      const itemAddResult = await this._sp.web.lists.getByTitle(listName).items.add({
+      // Step 1: Buat itemnya dulu
+      const itemAddResult = await sp.web.lists.getByTitle(listName).items.add({
         Title: title
       });
 
-      console.log("Item added successfully. New item ID:", itemAddResult.data.Id);
-
-      if (file) {
-        const itemWithAttachments = this._sp.web.lists.getByTitle(listName).items.getById(itemAddResult.data.Id);
-
-        await (itemWithAttachments as IItemWithAttachments).attachmentFiles.add(file.name, file);
-
-        console.log("Attachment added successfully.");
+      // Step 2: Tambahkan attachment jika ada
+      if (files && files.length > 0) {
+        const addedItem = itemAddResult.item;
+        for (const file of files) {
+          await addedItem.attachmentFiles.add(file.name, file);
+        }
       }
-
     } catch (error) {
-      console.error("Error adding list item:", error);
+      console.error("Error adding list item with attachments", error);
       throw error;
     }
   }
