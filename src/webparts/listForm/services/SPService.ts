@@ -21,6 +21,11 @@ export class SPService {
     title: string,
     startDate: string,   // <-- Parameter baru
     finishDate: string,  // <-- Parameter baru
+    hotel: number,
+  transport: number,
+  meals: number,
+  others: number,
+  total: number,
     parentFiles: File[],
     childFiles: File[]
   ): Promise<void> {
@@ -32,7 +37,12 @@ export class SPService {
       const itemAddResult = await sp.web.lists.getByTitle(parentListName).items.add({
         Title: title,
       StartDate: startDate,  // <-- Data baru untuk disimpan
-      FinishDate: finishDate   // <-- Data baru untuk disimpan
+      FinishDate: finishDate,   // <-- Data baru untuk disimpan
+      Hotel: hotel,
+      Transport: transport,
+      Meals: meals,
+      Others: others,
+      Total: total
       });
 
       // Ambil ID dari item yang baru saja dibuat
